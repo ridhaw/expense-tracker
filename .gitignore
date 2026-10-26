@@ -1,0 +1,8 @@
+.env
+**/bin/
+**/obj/
+frontend/node_modules/
+frontend/.next/
+*.user
+.vs/
+.idea/

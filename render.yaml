@@ -1,0 +1,32 @@
+# Blueprint Render : base PostgreSQL + API .NET + frontend Next.js.
+# Déploiement : Render → New → Blueprint → choisir ce dépôt.
+databases:
+  - name: expenses-db
+    databaseName: expenses
+    plan: free
+
+services:
+  - type: web
+    name: expenses-api
+    runtime: docker
+    rootDir: backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ConnectionStrings__Default
+        fromDatabase:
+          name: expenses-db
+          property: connectionString
+      - key: Jwt__Key
+        generateValue: true
+      - key: Cors__Origins__0
+        sync: false # URL publique du frontend, ex. https://expenses-web.onrender.com
+
+  - type: web
+    name: expenses-web
+    runtime: docker
+    rootDir: frontend
+    plan: free
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        sync: false # URL publique de l'API, ex. https://expenses-api.onrender.com
